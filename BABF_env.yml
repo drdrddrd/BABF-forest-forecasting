@@ -1,0 +1,17 @@
+name: BABF_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - xgboost
+  - jupyterlab
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - notebook
+  - geopandas
+  - rasterio
+  - matplotlib-scalebar
+  - xarray
+  - optuna
+  - tqdm
