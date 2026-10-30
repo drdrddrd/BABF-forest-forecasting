@@ -9,8 +9,8 @@ prediction scripts, plotting notebooks, and a mock data generator. The original
 NFI data are confidential and are not included. Generated data, predictions,
 tables, and figures are also not tracked by Git.
 
-The associated preprint is available on SSRN:
-[Computationally Efficient Predictions of Forest Dynamics for Large Areas](https://ssrn.com/abstract=6571427).
+The associated paper is published open access in Ecological Modelling:
+[Machine learning for modeling forest dynamics using National Forest Inventory and climate data](https://doi.org/10.1016/j.ecolmodel.2026.111763).
 
 ## Environment
 
@@ -296,13 +296,12 @@ Use all 100 seeds for ensemble results.
 
 ## Citations
 
-When using this repository, cite the associated preprint:
+When using this repository, cite the associated paper:
 
 - Rieder, Dea; Costa, Maximiliano; Temperli, Christian; Giardina, Francesco; and
-  Vaccario, Giacomo (2026). Computationally Efficient Predictions of Forest
-  Dynamics for Large Areas. SSRN preprint.
-  https://ssrn.com/abstract=6571427 or
-  https://dx.doi.org/10.2139/ssrn.6571427
+  Vaccario, Giacomo (2026). Machine learning for modeling forest dynamics using
+  National Forest Inventory and climate data. Ecological Modelling, 521, 111763.
+  https://doi.org/10.1016/j.ecolmodel.2026.111763
 
 When using the full workflow, also cite the underlying datasets according to
 their data-provider requirements. At minimum, this project depends on:
