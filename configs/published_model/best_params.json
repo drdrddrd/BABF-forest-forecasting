@@ -1,0 +1,40 @@
+{
+  "targets": {
+    "BASFPH_next_INVNR": {
+      "lasso": {
+        "alpha": 0.0020565123083486517
+      },
+      "xgboost": {
+        "best_params": {
+          "n_estimators": 689,
+          "learning_rate": 0.011961463643257128,
+          "max_depth": 4,
+          "min_child_weight": 2,
+          "subsample": 0.520917786574746,
+          "colsample_bytree": 0.6835237541496767,
+          "gamma": 1.646521997772357e-06,
+          "lambda": 0.19305945358856358,
+          "alpha": 0.6497815404265804
+        }
+      }
+    },
+    "HWSW_prop_next_INVNR": {
+      "lasso": {
+        "alpha": 3.5396057790009104e-05
+      },
+      "xgboost": {
+        "best_params": {
+          "n_estimators": 521,
+          "learning_rate": 0.015739670378388804,
+          "max_depth": 4,
+          "min_child_weight": 1,
+          "subsample": 0.8164415152350387,
+          "colsample_bytree": 0.9686146561912705,
+          "gamma": 0.004782839526396923,
+          "lambda": 0.0001303427192048785,
+          "alpha": 0.27960408808317017
+        }
+      }
+    }
+  }
+}

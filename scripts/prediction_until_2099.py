@@ -29,7 +29,7 @@ N_JOBS = 8
 
 DATA_DIR = PROJECT_ROOT / "data"
 base_dir = DATA_DIR / "preprocessed" / "final_nfi_ch2018_merged"
-HYPERPARAMETERS_FILE = DATA_DIR / "hyperparameters" / "nfi123" / "best_params.json"
+HYPERPARAMETERS_FILE = PROJECT_ROOT / "configs" / "published_model" / "best_params.json"
 
 
 def process_single_seed(

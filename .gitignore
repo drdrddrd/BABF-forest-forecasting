@@ -16,3 +16,9 @@ data/
 # Python cache
 __pycache__/
 *.pyc
+
+# Model weights: the ensemble archive is published as a GitHub Release asset
+# (it exceeds GitHub's 100 MB per-file limit). The .sha256 sidecar stays tracked
+# so a download can be verified.
+model_weights/*.tar.xz
+model_weights/published_projection_ensemble/

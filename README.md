@@ -103,6 +103,9 @@ root.
 .
 ├── BABF_env.yml
 ├── README.md
+├── configs
+│   └── published_model
+│       └── best_params.json
 ├── data
 │   ├── hyperparameters
 │   ├── predictions
@@ -125,6 +128,7 @@ root.
 │   └── rolling_window_eval
 ├── notebooks
 │   └── sensitivity_analysis
+├── model_weights
 ├── scripts
 └── tables
     └── rolling_window_eval
@@ -176,8 +180,8 @@ data in the expected `data/raw/` locations.
    Train and evaluate Lasso, XGBoost, and persistence baselines with
    rolling-window or forward-style evaluation.
 7. `scripts/prediction_until_2099.py`
-   Train XGBoost models and produce iterative predictions through 2099 for
-   RCP26, RCP45, and RCP85.
+   Train XGBoost models using `configs/published_model/best_params.json` and
+   produce iterative predictions through 2099 for RCP26, RCP45, and RCP85.
 8. `notebooks/prediction_plots.ipynb`
    Aggregate seed-level prediction CSVs and save final prediction figures.
 
@@ -210,6 +214,85 @@ The main generated outputs are:
 
 These outputs are generated locally and are not tracked by Git. The `.gitignore`
 file excludes `data/`, `*.csv`, `*.png`, and `*.pdf`.
+
+## Published Models
+
+The parameters for reproducing the published projections (Figures 5–7) are in
+[`configs/published_model/best_params.json`](configs/published_model/best_params.json).
+Run the commands below from the repository root with `BABF_env` activated and
+the NFI–CH2018 input CSVs prepared as described above. Reproducing the paper
+requires the original data.
+
+### Forecast Through 2099
+
+This command trains models with the published parameters and forecasts all
+three RCP scenarios through 2099:
+
+```bash
+python scripts/prediction_until_2099.py
+```
+
+Results are saved in `data/predictions/Predictions_<RCP>/`.
+
+### Predict with Saved Weights
+
+Download the
+[weights archive](https://github.com/drdrddrd/BABF-forest-forecasting/releases/download/model-weights-v1.0.0/published_projection_ensemble_weights.tar.xz)
+into `model_weights/`. Then verify and extract it:
+
+```bash
+(cd model_weights && shasum -a 256 -c published_projection_ensemble_weights.tar.xz.sha256)
+tar -xJf model_weights/published_projection_ensemble_weights.tar.xz -C model_weights
+```
+
+The example below loads saved models for one seed and predicts one inventory
+step for three plots under RCP85, without training.
+
+<details>
+<summary>Python example</summary>
+
+```python
+import json
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import xgboost as xgb
+
+weights = Path("model_weights/published_projection_ensemble")
+manifest = json.loads((weights / "manifest.json").read_text())
+scenario = "RCP85"
+metadata = manifest["scenario_training"][scenario]
+data = pd.read_csv(
+    f"data/preprocessed/final_nfi_ch2018_merged/NFI_with_Climate_Averages_{scenario}.csv"
+)
+rows = data.loc[data["INVNR"].eq(550)].head(3).copy()
+
+# Retain the fitted category levels, even when using only a subset of plots.
+for column, levels in metadata["categories"].items():
+    if not rows[column].dropna().isin(levels).all():
+        raise ValueError(f"Unknown category in {column}")
+    rows[column] = pd.Categorical(rows[column], categories=levels)
+X = pd.get_dummies(rows, columns=list(metadata["categories"]), drop_first=True)
+X = X[metadata["feature_names_in_order"]]
+
+predictions = {}
+for target, filename, upper in [
+    ("BASFPH", "basal_area.json", 100),
+    ("HWSW_prop", "broadleaf_fraction.json", 1),
+]:
+    model = xgb.Booster()
+    model.load_model(weights / f"models/{scenario}/seed_71369/{filename}")
+    predictions[target] = np.clip(model.inplace_predict(X), 0, upper)
+
+print(pd.DataFrame(predictions, index=rows.index))
+```
+
+</details>
+
+To forecast through 2099 with saved weights, repeat the prediction step using
+the updated basal area, broadleaf fraction, and next interval's climate inputs.
+Use all 100 seeds for ensemble results.
 
 ## Citations
 
